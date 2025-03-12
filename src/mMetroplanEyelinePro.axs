@@ -56,7 +56,6 @@ DEFINE_TYPE
 (*               VARIABLE DEFINITIONS GO BELOW             *)
 (***********************************************************)
 DEFINE_VARIABLE
-volatile integer iModuleEnabled
 
 (***********************************************************)
 (*               LATCHING DEFINITIONS GO BELOW             *)
@@ -73,78 +72,64 @@ DEFINE_MUTUALLY_EXCLUSIVE
 (***********************************************************)
 (* EXAMPLE: DEFINE_FUNCTION <RETURN_TYPE> <NAME> (<PARAMETERS>) *)
 (* EXAMPLE: DEFINE_CALL '<NAME>' (<PARAMETERS>) *)
+
 define_function SendStringRaw(char cParam[]) {
-    NAVErrorLog(NAV_LOG_LEVEL_DEBUG, NAVFormatStandardLogMessage(NAV_STANDARD_LOG_MESSAGE_TYPE_STRING_TO, dvPort, cParam))
     send_string dvPort,"cParam"
 }
+
 
 define_function SendString(char cParam[]) {
     SendStringRaw(cParam)
 }
+
+
 (***********************************************************)
 (*                STARTUP CODE GOES BELOW                  *)
 (***********************************************************)
 DEFINE_START {
-    iModuleEnabled = true
-    rebuild_event()
+
 }
+
 (***********************************************************)
 (*                THE EVENTS GO BELOW                      *)
 (***********************************************************)
 DEFINE_EVENT
+
 data_event[dvPort] {
     online: {
-    send_command data.device,"'SET MODE DATA'"
-    send_command data.device,"'SET BAUD 2400,N,8,1 485 DISABLE'"
-    send_command data.device,"'B9MOFF'"
-    send_command data.device,"'CHARD-0'"
-    send_command data.device,"'CHARDM-0'"
-    send_command data.device,"'HSOFF'"
+        send_command data.device,"'SET MODE DATA'"
+        send_command data.device,"'SET BAUD 2400,N,8,1 485 DISABLE'"
+        send_command data.device,"'B9MOFF'"
+        send_command data.device,"'CHARD-0'"
+        send_command data.device,"'CHARDM-0'"
+        send_command data.device,"'HSOFF'"
     }
 }
 
-define_event data_event[vdvObject] {
+data_event[vdvObject] {
     command: {
-    stack_var char cCmdHeader[NAV_MAX_CHARS]
-    stack_var char cCmdParam[2][NAV_MAX_CHARS]
-    if (iModuleEnabled) {
-        NAVErrorLog(NAV_LOG_LEVEL_DEBUG, NAVFormatStandardLogMessage(NAV_STANDARD_LOG_MESSAGE_TYPE_COMMAND_FROM, data.device, data.text))
+        stack_var char cCmdHeader[NAV_MAX_CHARS]
+        stack_var char cCmdParam[2][NAV_MAX_CHARS]
+
         cCmdHeader = DuetParseCmdHeader(data.text)
         cCmdParam[1] = DuetParseCmdParam(data.text)
         cCmdParam[2] = DuetParseCmdParam(data.text)
+
         switch (cCmdHeader) {
-        case 'PROPERTY': {
-
-        }
-        case 'PASSTHRU': { SendString(cCmdParam[1]) }
-
-        case 'SCREEN': {
-            switch (cCmdParam[1]) {
-            case 'UP': { SendString("$FF,$EE,$EE,$DD") }
-            case 'DOWN': { SendString("$FF,$EE,$EE,$EE") }
-            case 'STOP': { SendString("$FF,$EE,$EE,$CC") }
+            case 'PASSTHRU': { SendString(cCmdParam[1]) }
+            case 'SCREEN': {
+                switch (cCmdParam[1]) {
+                    case 'UP': { SendString("$FF,$EE,$EE,$DD") }
+                    case 'DOWN': { SendString("$FF,$EE,$EE,$EE") }
+                    case 'STOP': { SendString("$FF,$EE,$EE,$CC") }
+                }
             }
         }
-        }
-    }
     }
 }
 
-channel_event[vdvObject,0] {
-    on: {
-    if (iModuleEnabled) {
-
-    }
-    }
-    off: {
-    if (iModuleEnabled) {
-
-    }
-    }
-}
 
 (***********************************************************)
 (*                     END OF PROGRAM                      *)
 (*        DO NOT PUT ANY CODE BELOW THIS COMMENT           *)
 (***********************************************************)
-
