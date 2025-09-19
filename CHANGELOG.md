@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.2.0](https://github.com/Norgate-AV/NAVDatabase.Amx.MetroplanEyelinePro/compare/v1.1.0...v1.2.0) (2025-09-19)
+
+### 🌟 Features
+
+- update for NAVFoundation v3+ ([9dca7fb](https://github.com/Norgate-AV/NAVDatabase.Amx.MetroplanEyelinePro/commit/9dca7fb8f526331ba70b5ac5ea1c0a80d4a9aa90))
+
 ## [1.1.0](https://github.com/Norgate-AV/NAVDatabase.Amx.MetroplanEyelinePro/compare/v1.0.0...v1.1.0) (2025-03-12)
 
 ### 🌟 Features
