@@ -4,7 +4,8 @@ MODULE_NAME='mMetroplanEyelinePro'      (
                                         )
 
 (***********************************************************)
-#include 'NAVFoundation.ModuleBase.axi'
+#include 'NAVFoundation.Core.h.axi'
+#include 'NAVFoundation.SnapiHelpers.axi'
 
 /*
  _   _                       _          ___     __
